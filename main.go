@@ -120,11 +120,21 @@ func main() {
 		os.Exit(1)
 	}
 	if strings.ToLower(os.Getenv("ENABLE_WEBHOOKS")) != "false" {
-		if err = (&glancev1.Glance{}).SetupWebhookWithManager(mgr); err != nil {
+		glanceDefaults := glancev1.GlanceDefaults{
+			ContainerImageURL: os.Getenv("GLANCE_API_IMAGE_URL_DEFAULT"),
+		}
+
+		if err = (&glancev1.Glance{}).SetupWebhookWithManager(mgr, glanceDefaults); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Glance")
 			os.Exit(1)
 		}
+
+		if err = (&glancev1.GlanceAPI{}).SetupWebhookWithManager(mgr, glanceDefaults); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "GlanceAPI")
+			os.Exit(1)
+		}
 	}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

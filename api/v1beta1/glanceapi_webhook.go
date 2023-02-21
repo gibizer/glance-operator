@@ -23,69 +23,58 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )
 
-// GlanceDefaults -
-type GlanceDefaults struct {
-	ContainerImageURL string
-}
-
-var glanceDefaults GlanceDefaults
+// we can make this its own separate struct type if necessary later on
+var glanceAPIDefaults GlanceDefaults
 
 // log is for logging in this package.
-var glancelog = logf.Log.WithName("glance-resource")
+var glanceapilog = logf.Log.WithName("glanceapi-resource")
 
 // SetupWebhookWithManager sets up the webhook with the Manager
-func (r *Glance) SetupWebhookWithManager(mgr ctrl.Manager, defaults GlanceDefaults) error {
-	glanceDefaults = defaults
+func (r *GlanceAPI) SetupWebhookWithManager(mgr ctrl.Manager, defaults GlanceDefaults) error {
+	glanceAPIDefaults = defaults
 
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-glance-openstack-org-v1beta1-glance,mutating=true,failurePolicy=fail,sideEffects=None,groups=glance.openstack.org,resources=glances,verbs=create;update,versions=v1beta1,name=mglance.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-glance-openstack-org-v1beta1-glanceapi,mutating=true,failurePolicy=fail,sideEffects=None,groups=glance.openstack.org,resources=glanceapis,verbs=create;update,versions=v1beta1,name=mglanceapi.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &Glance{}
+var _ webhook.Defaulter = &GlanceAPI{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *Glance) Default() {
-	glancelog.Info("default", "name", r.Name)
+func (r *GlanceAPI) Default() {
+	glanceapilog.Info("default", "name", r.Name)
 
 	if r.Spec.ContainerImage == "" {
-		r.Spec.ContainerImage = glanceDefaults.ContainerImageURL
-	}
-
-	if r.Spec.GlanceAPIExternal.ContainerImage == "" {
-		r.Spec.GlanceAPIExternal.ContainerImage = glanceDefaults.ContainerImageURL
-	}
-
-	if r.Spec.GlanceAPIInternal.ContainerImage == "" {
-		r.Spec.GlanceAPIInternal.ContainerImage = glanceDefaults.ContainerImageURL
+		r.Spec.ContainerImage = glanceAPIDefaults.ContainerImageURL
 	}
 }
 
-//+kubebuilder:webhook:path=/validate-glance-openstack-org-v1beta1-glance,mutating=false,failurePolicy=fail,sideEffects=None,groups=glance.openstack.org,resources=glances,verbs=create;update,versions=v1beta1,name=vglance.kb.io,admissionReviewVersions=v1
+// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
+//+kubebuilder:webhook:path=/validate-glance-openstack-org-v1beta1-glanceapi,mutating=false,failurePolicy=fail,sideEffects=None,groups=glance.openstack.org,resources=glanceapis,verbs=create;update,versions=v1beta1,name=vglanceapi.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &Glance{}
+var _ webhook.Validator = &GlanceAPI{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Glance) ValidateCreate() error {
-	glancelog.Info("validate create", "name", r.Name)
+func (r *GlanceAPI) ValidateCreate() error {
+	glanceapilog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
 	return nil
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Glance) ValidateUpdate(old runtime.Object) error {
-	glancelog.Info("validate update", "name", r.Name)
+func (r *GlanceAPI) ValidateUpdate(old runtime.Object) error {
+	glanceapilog.Info("validate update", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object update.
 	return nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Glance) ValidateDelete() error {
-	glancelog.Info("validate delete", "name", r.Name)
+func (r *GlanceAPI) ValidateDelete() error {
+	glanceapilog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil
