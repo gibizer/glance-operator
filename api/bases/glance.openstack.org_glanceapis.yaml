@@ -133,6 +133,7 @@ spec:
                   required:
                   - ipAddressPool
                   type: object
+                nullable: true
                 type: array
               extraMounts:
                 description: ExtraMounts containing conf files and credentials
@@ -1990,12 +1991,14 @@ spec:
                   required:
                   - extraVol
                   type: object
+                nullable: true
                 type: array
               networkAttachments:
                 description: NetworkAttachments is a list of NetworkAttachment resource
                   names to expose the services to the given network
                 items:
                   type: string
+                nullable: true
                 type: array
               nodeSelector:
                 additionalProperties:

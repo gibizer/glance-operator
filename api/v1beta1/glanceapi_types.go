@@ -105,18 +105,21 @@ type GlanceAPISpec struct {
 
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default={}
+	// +nullable
 	// ExtraMounts containing conf files and credentials
-	ExtraMounts []GlanceExtraVolMounts `json:"extraMounts,omitempty"`
+	ExtraMounts []GlanceExtraVolMounts `json:"extraMounts"`
 
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default={}
+	// +nullable
 	// NetworkAttachments is a list of NetworkAttachment resource names to expose the services to the given network
-	NetworkAttachments []string `json:"networkAttachments,omitempty"`
+	NetworkAttachments []string `json:"networkAttachments"`
 
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default={}
+	// +nullable
 	// ExternalEndpoints, expose a VIP via MetalLB on the pre-created address pool
-	ExternalEndpoints []MetalLBConfig `json:"externalEndpoints,omitempty"`
+	ExternalEndpoints []MetalLBConfig `json:"externalEndpoints"`
 }
 
 // MetalLBConfig to configure the MetalLB loadbalancer service

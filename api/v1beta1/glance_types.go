@@ -108,8 +108,9 @@ type GlanceSpec struct {
 
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default={}
+	// +nullable
 	// ExtraMounts containing conf files and credentials
-	ExtraMounts []GlanceExtraVolMounts `json:"extraMounts,omitempty"`
+	ExtraMounts []GlanceExtraVolMounts `json:"extraMounts"`
 }
 
 // PasswordSelector to identify the DB and AdminUser password from the Secret

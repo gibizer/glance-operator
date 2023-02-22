@@ -74,7 +74,8 @@ type GlanceAPIReconciler struct {
 
 // Reconcile reconcile Glance API requests
 func (r *GlanceAPIReconciler) Reconcile(ctx context.Context, req ctrl.Request) (result ctrl.Result, _err error) {
-	_ = log.FromContext(ctx)
+	l := log.FromContext(ctx)
+	l.Info("!!! without omitempty with nullable")
 
 	// Fetch the GlanceAPI instance
 	instance := &glancev1.GlanceAPI{}
